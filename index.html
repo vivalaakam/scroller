@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <script src="../js/jquery.js" ></script>
+    <script>
+      $(document).ready(function() {
+        var entry = $('.entry'),
+                scroll = entry.find('.scroll'),
+                content = entry.find('.content')
+                index = 0;
+        console.log(scroll.height(), entry.height(), content.height() , index)
+              
+        if (content.height() > entry.height()) {
+          console.log( entry.height() * scroll.height() / content.height() )
+          
+          var sw = entry.height() * scroll.height() / content.height();
+          index = ( content.height() - entry.height() ) / ( entry.height() - sw );
+          console.log(index)
+          scroll.find('.scroller').height( sw )
+        }
+      })
+    </script>
+    <style>
+      .entry {
+        height: 200px;
+        overflow: hidden;
+        position: relative;
+      }
+      .content {
+        background-color: yellow;
+        padding: 5px 25px 5px 5px;
+        position: relative;
+      }
+      .scroll {
+        background-color: yellowgreen;
+        position: absolute;
+        right: 0px;
+        width: 20px;
+        top: 0px;
+        bottom: 0px;
+      }
+      .scroller {
+        width: 20px;
+        background-color: red;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrapper">
+      <div class="entry">
+        <div class="content">
+          1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>
+          11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20<br>
+          21<br>22<br>23<br>24<br>25<br>
+        </div>
+        <div class="scroll">
+          <div class="scroller"></div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
