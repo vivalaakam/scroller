@@ -4,22 +4,50 @@
     <title></title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <script src="../js/jquery.js" ></script>
+    <script src="../js/jquery.mousewheel.js" ></script>
     <script>
       $(document).ready(function() {
         var entry = $('.entry'),
-                scroll = entry.find('.scroll'),
-                content = entry.find('.content')
-                index = 0;
-        console.log(scroll.height(), entry.height(), content.height() , index)
+        scroll = entry.find('.scroll'),
+        content = entry.find('.content') ,
+        scroller = scroll.find('.scroller'),
+        index = 0 , active , top = 0 , y0 = 0;
               
-        if (content.height() > entry.height()) {
-          console.log( entry.height() * scroll.height() / content.height() )
-          
+        if (content.height() > entry.height()) {          
           var sw = entry.height() * scroll.height() / content.height();
           index = ( content.height() - entry.height() ) / ( entry.height() - sw );
-          console.log(index)
           scroll.find('.scroller').height( sw )
         }
+
+        scroller.mousedown(function(e) {
+          active = true;
+          top =  e.offsetY 
+          y0 = e.pageY - e.target.offsetTop - e.offsetY
+        })
+        
+        scroller.mousemove(function(e) {
+          e.preventDefault();
+          if(active ) { 
+            var t = e.pageY - y0 - top;
+            if(  t >= 0 &&  t <= ( scroll.height() - scroller.height()) )  {
+              scroller.css({top : t});
+              content.css({top : t * index * -1})
+            }}
+          
+        });
+        scroller.mouseup(function(e) {
+          active = false;
+          top = 0
+          y0 = 0
+        }); 
+        
+        entry.mousewheel(function(event, delta, deltaX, deltaY) {
+          var et = event.target.offsetTop + (delta * 30);
+          if(et <= 0 && et >= -1 * (content.height() - entry.height())) {
+            content.css({ top : et })
+            scroller.css({top : et / index * -1});
+          }
+        });
       })
     </script>
     <style>
@@ -27,14 +55,13 @@
         height: 200px;
         overflow: hidden;
         position: relative;
+        border: 1px solid #DDD;
       }
       .content {
-        background-color: yellow;
         padding: 5px 25px 5px 5px;
         position: relative;
       }
       .scroll {
-        background-color: yellowgreen;
         position: absolute;
         right: 0px;
         width: 20px;
@@ -43,7 +70,8 @@
       }
       .scroller {
         width: 20px;
-        background-color: red;
+        background-color: #DDD;
+        position: absolute;
       }
     </style>
   </head>
